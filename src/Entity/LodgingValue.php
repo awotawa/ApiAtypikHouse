@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\LodgingValueRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: LodgingValueRepository::class)]
 #[ApiResource]
@@ -15,7 +16,12 @@ class LodgingValue
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\Length([
+      'max' => 10,
+      'maxMessage' => 'Your value cannot be longer than {{ limit }} characters',
+    ])]
+    #[Assert\Regex(['pattern' => "/^([A-Za-z]+)$/"])]
+    #[ORM\Column(type: 'string', length: 10)]
     private $value;
 
     #[ORM\ManyToOne(targetEntity: Lodging::class, inversedBy: 'lodgingValues')]
