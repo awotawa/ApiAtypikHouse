@@ -9,6 +9,7 @@ use App\Repository\UserRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource]
@@ -20,21 +21,45 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
+    #[Assert\Email()]
     private $email;
 
     #[ORM\Column(type: 'json')]
     private $roles = [];
 
+    #[Assert\NotBlank()]
+    #[Assert\Length([
+      'min' => 8,
+      'minMessage' => 'Your password must be at least {{ limit }} characters long',
+    ])]
+    #[Assert\Regex(['pattern' => "/^(?=.*[A-Z])(?=.*[\-._~!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8,}$/"])]
     #[ORM\Column(type: 'string')]
     private $password;
 
+    #[Assert\NotBlank()]
+    #[Assert\Length([
+      'min' => 2,
+      'max' => 255,
+      'minMessage' => 'Your first name must be at least {{ limit }} characters long',
+      'maxMessage' => 'Your first name cannot be longer than {{ limit }} characters',
+    ])]
+    #[Assert\Regex(['pattern' => "/^([A-Za-zÀ-ÿ]+)$/"])]
     #[ORM\Column(type: 'string', length: 255)]
     private $firstName;
 
+    #[Assert\NotBlank()]
+    #[Assert\Length([
+      'min' => 2,
+      'max' => 255,
+      'minMessage' => 'Your last name must be at least {{ limit }} characters long',
+      'maxMessage' => 'Your last name cannot be longer than {{ limit }} characters',
+    ])]
+    #[Assert\Regex(['pattern' => "/^([A-Za-zÀ-ÿ]+)$/"])]
     #[ORM\Column(type: 'string', length: 255)]
     private $lastName;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Regex(['pattern' => "/(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&=]*))/"])]
     private $photo;
 
     #[ORM\OneToOne(mappedBy: 'user', targetEntity: Owner::class, cascade: ['persist', 'remove'])]
