@@ -35,6 +35,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $photo;
 
+    #[ORM\OneToOne(mappedBy: 'user', targetEntity: Owner::class, cascade: ['persist', 'remove'])]
+    private $owner;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -137,6 +140,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPhoto(?string $photo): self
     {
         $this->photo = $photo;
+
+        return $this;
+    }
+
+    public function getOwner(): ?Owner
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(Owner $owner): self
+    {
+        // set the owning side of the relation if necessary
+        if ($owner->getUser() !== $this) {
+            $owner->setUser($this);
+        }
+
+        $this->owner = $owner;
 
         return $this;
     }
