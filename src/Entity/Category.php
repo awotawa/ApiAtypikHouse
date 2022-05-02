@@ -23,9 +23,13 @@ class Category
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Property::class, orphanRemoval: true)]
     private $properties;
 
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Lodging::class, orphanRemoval: true)]
+    private $lodgings;
+
     public function __construct()
     {
         $this->properties = new ArrayCollection();
+        $this->lodgings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -69,6 +73,36 @@ class Category
             // set the owning side to null (unless already changed)
             if ($property->getCategory() === $this) {
                 $property->setCategory(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Lodging>
+     */
+    public function getLodgings(): Collection
+    {
+        return $this->lodgings;
+    }
+
+    public function addLodging(Lodging $lodging): self
+    {
+        if (!$this->lodgings->contains($lodging)) {
+            $this->lodgings[] = $lodging;
+            $lodging->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLodging(Lodging $lodging): self
+    {
+        if ($this->lodgings->removeElement($lodging)) {
+            // set the owning side to null (unless already changed)
+            if ($lodging->getCategory() === $this) {
+                $lodging->setCategory(null);
             }
         }
 
