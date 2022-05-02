@@ -40,9 +40,13 @@ class Lodging
     #[ORM\OneToMany(mappedBy: 'lodging', targetEntity: Reservation::class, orphanRemoval: true)]
     private $reservations;
 
+    #[ORM\OneToMany(mappedBy: 'lodging', targetEntity: LodgingValue::class, orphanRemoval: true)]
+    private $lodgingValues;
+
     public function __construct()
     {
         $this->reservations = new ArrayCollection();
+        $this->lodgingValues = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -146,6 +150,36 @@ class Lodging
             // set the owning side to null (unless already changed)
             if ($reservation->getLodging() === $this) {
                 $reservation->setLodging(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LodgingValue>
+     */
+    public function getLodgingValues(): Collection
+    {
+        return $this->lodgingValues;
+    }
+
+    public function addLodgingValue(LodgingValue $lodgingValue): self
+    {
+        if (!$this->lodgingValues->contains($lodgingValue)) {
+            $this->lodgingValues[] = $lodgingValue;
+            $lodgingValue->setLodging($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLodgingValue(LodgingValue $lodgingValue): self
+    {
+        if ($this->lodgingValues->removeElement($lodgingValue)) {
+            // set the owning side to null (unless already changed)
+            if ($lodgingValue->getLodging() === $this) {
+                $lodgingValue->setLodging(null);
             }
         }
 

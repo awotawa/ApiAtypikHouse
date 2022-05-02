@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\PropertyRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PropertyRepository::class)]
@@ -24,6 +26,14 @@ class Property
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'properties')]
     #[ORM\JoinColumn(nullable: false)]
     private $category;
+
+    #[ORM\OneToMany(mappedBy: 'property', targetEntity: LodgingValue::class, orphanRemoval: true)]
+    private $lodgingValues;
+
+    public function __construct()
+    {
+        $this->lodgingValues = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -62,6 +72,36 @@ class Property
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, LodgingValue>
+     */
+    public function getLodgingValues(): Collection
+    {
+        return $this->lodgingValues;
+    }
+
+    public function addLodgingValue(LodgingValue $lodgingValue): self
+    {
+        if (!$this->lodgingValues->contains($lodgingValue)) {
+            $this->lodgingValues[] = $lodgingValue;
+            $lodgingValue->setProperty($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLodgingValue(LodgingValue $lodgingValue): self
+    {
+        if ($this->lodgingValues->removeElement($lodgingValue)) {
+            // set the owning side to null (unless already changed)
+            if ($lodgingValue->getProperty() === $this) {
+                $lodgingValue->setProperty(null);
+            }
+        }
 
         return $this;
     }
