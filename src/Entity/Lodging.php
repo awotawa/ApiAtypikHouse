@@ -7,6 +7,7 @@ use App\Repository\LodgingRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: LodgingRepository::class)]
 #[ApiResource]
@@ -17,16 +18,43 @@ class Lodging
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank()]
+    #[Assert\Length([
+      'min' => 2,
+      'max' => 50,
+      'minMessage' => 'The name must be at least {{ limit }} characters long',
+      'maxMessage' => 'The name cannot be longer than {{ limit }} characters',
+    ])]
+    #[Assert\Regex(['pattern' => "/^([A-Za-zÀ-ÿ '-]+)$/"])]
+    #[ORM\Column(type: 'string', length: 50)]
     private $name;
 
+    #[Assert\NotBlank()]
+    #[Assert\Range([
+      'min' => 0.01,
+      'max' => 9999.99
+    ])]
+    #[Assert\Regex(['pattern' => "/^([0-9]+(\.[0-9]{0,2})?)$/"])]
     #[ORM\Column(type: 'float')]
     private $rate;
 
-    #[ORM\Column(type: 'text')]
+    #[Assert\NotBlank()]
+    #[Assert\Length([
+      'min' => 50,
+      'max' => 255,
+      'minMessage' => 'Your description must be at least {{ limit }} characters long',
+      'maxMessage' => 'Your description cannot be longer than {{ limit }} characters',
+    ])]
+    #[Assert\Regex(['pattern' => "/^([A-Za-z0-9À-ÿ ',:?()~&\.-]+)$/"])]
+    #[ORM\Column(type: 'text', length: 255)]
     private $description;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank()]
+    #[Assert\Length([
+      'max' => 50,
+      'maxMessage' => 'Your adress cannot be longer than {{ limit }} characters',
+    ])]
+    #[ORM\Column(type: 'text', length: 50)]
     private $address;
 
     #[ORM\ManyToOne(targetEntity: Owner::class, inversedBy: 'lodgings')]
