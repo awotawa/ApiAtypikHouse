@@ -43,10 +43,14 @@ class Lodging
     #[ORM\OneToMany(mappedBy: 'lodging', targetEntity: LodgingValue::class, orphanRemoval: true)]
     private $lodgingValues;
 
+    #[ORM\OneToMany(mappedBy: 'lodging', targetEntity: Media::class, orphanRemoval: true)]
+    private $media;
+
     public function __construct()
     {
         $this->reservations = new ArrayCollection();
         $this->lodgingValues = new ArrayCollection();
+        $this->media = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -180,6 +184,36 @@ class Lodging
             // set the owning side to null (unless already changed)
             if ($lodgingValue->getLodging() === $this) {
                 $lodgingValue->setLodging(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Media>
+     */
+    public function getMedia(): Collection
+    {
+        return $this->media;
+    }
+
+    public function addMedium(Media $medium): self
+    {
+        if (!$this->media->contains($medium)) {
+            $this->media[] = $medium;
+            $medium->setLodging($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMedium(Media $medium): self
+    {
+        if ($this->media->removeElement($medium)) {
+            // set the owning side to null (unless already changed)
+            if ($medium->getLodging() === $this) {
+                $medium->setLodging(null);
             }
         }
 
