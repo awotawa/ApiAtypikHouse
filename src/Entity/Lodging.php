@@ -2,19 +2,22 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Annotation\ApiResource;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
-use App\Repository\LodgingRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\LodgingRepository;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 #[ORM\Entity(repositoryClass: LodgingRepository::class)]
 #[ApiResource(
   collectionOperations: ['get', 'post'],
   itemOperations: ['get', 'patch', 'delete'],
+  normalizationContext: ['groups' => ['lodging:read']],
+  denormalizationContext: ['groups' => ['lodging:write']],
   attributes: ["pagination_items_per_page" => 10],
 )]
 #[ApiFilter(SearchFilter::class, properties: ['address' => 'partial'])]
@@ -34,6 +37,7 @@ class Lodging
     ])]
     #[Assert\Regex(['pattern' => "/^([A-Za-zÀ-ÿ '-]+)$/"])]
     #[ORM\Column(type: 'string', length: 50)]
+    #[Groups(["lodging:read", "lodging:write"])]
     private $name;
 
     #[Assert\NotBlank()]
@@ -43,6 +47,7 @@ class Lodging
     ])]
     #[Assert\Regex(['pattern' => "/^([0-9]+(\.[0-9]{0,2})?)$/"])]
     #[ORM\Column(type: 'float')]
+    #[Groups(["lodging:read", "lodging:write"])]
     private $rate;
 
     #[Assert\NotBlank()]
@@ -54,6 +59,7 @@ class Lodging
     ])]
     #[Assert\Regex(['pattern' => "/^([A-Za-z0-9À-ÿ ',:?()~&\.-]+)$/"])]
     #[ORM\Column(type: 'text', length: 255)]
+    #[Groups(["lodging:read", "lodging:write"])]
     private $description;
 
     #[Assert\NotBlank()]
@@ -62,23 +68,29 @@ class Lodging
       'maxMessage' => 'Your adress cannot be longer than {{ limit }} characters',
     ])]
     #[ORM\Column(type: 'text', length: 50)]
+    #[Groups(["lodging:read", "lodging:write"])]
     private $address;
 
     #[ORM\ManyToOne(targetEntity: Owner::class, inversedBy: 'lodgings')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["lodging:read"])]
     private $owner;
 
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'lodgings')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["lodging:read"])]
     private $category;
 
     #[ORM\OneToMany(mappedBy: 'lodging', targetEntity: Reservation::class, orphanRemoval: true)]
+    #[Groups(["lodging:read"])]
     private $reservations;
 
     #[ORM\OneToMany(mappedBy: 'lodging', targetEntity: LodgingValue::class, orphanRemoval: true)]
+    #[Groups(["lodging:read"])]
     private $lodgingValues;
 
     #[ORM\OneToMany(mappedBy: 'lodging', targetEntity: Media::class, orphanRemoval: true)]
+    #[Groups(["lodging:read"])]
     private $media;
 
     public function __construct()
