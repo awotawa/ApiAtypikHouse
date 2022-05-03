@@ -11,6 +11,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
   collectionOperations: ['get', 'post'],
   itemOperations: ['get', 'patch', 'delete'],
+  normalizationContext: ['groups' => ['lodgingvalue:read']],
+  denormalizationContext: ['groups' => ['lodgingvalue:write']],
 )]
 class LodgingValue
 {
@@ -25,14 +27,17 @@ class LodgingValue
     ])]
     #[Assert\Regex(['pattern' => "/^([A-Za-z]+)$/"])]
     #[ORM\Column(type: 'string', length: 10)]
+    #[Groups(["lodgingvalue:read", "lodgingvalue:write"])]
     private $value;
 
     #[ORM\ManyToOne(targetEntity: Lodging::class, inversedBy: 'lodgingValues')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["lodgingvalue:read"])]
     private $lodging;
 
     #[ORM\ManyToOne(targetEntity: Property::class, inversedBy: 'lodgingValues')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["lodgingvalue:read"])]
     private $property;
 
     public function getId(): ?int
