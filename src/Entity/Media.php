@@ -8,7 +8,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MediaRepository::class)]
-#[ApiResource]
+#[ApiResource(
+  collectionOperations: ['get', 'post'],
+  itemOperations: ['get', 'patch', 'delete'],
+)]
 class Media
 {
     #[ORM\Id]
