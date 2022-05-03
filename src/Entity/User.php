@@ -26,6 +26,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'integer')]
     private $id;
 
+    #[Assert\NotBlank()]
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     #[Assert\Email()]
     #[Groups(["user:read", "user:write", "owner:read", "reservation:read"])]
