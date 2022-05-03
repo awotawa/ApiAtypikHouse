@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -40,6 +41,7 @@ class Category
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Lodging::class, orphanRemoval: true)]
     #[Groups(["category:read"])]
+    #[ApiSubresource()]
     private $lodgings;
 
     public function __construct()
