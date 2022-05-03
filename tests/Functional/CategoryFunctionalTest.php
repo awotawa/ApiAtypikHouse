@@ -9,7 +9,7 @@ class CategoryFunctionalTest extends ApiTestCase
 {
   public function testGetCollection(): void
   {
-    static::createClient()->request('GET', 'api/categories');
+    $response = static::createClient()->request('GET', 'api/categories');
 
     $this->assertResponseIsSuccessful();
 
@@ -23,5 +23,7 @@ class CategoryFunctionalTest extends ApiTestCase
         "@type" => "hydra:Collection",
         "hydra:totalItems" => 20,
     ]);
+
+    $this->assertCount(20, $response->toArray()['hydra:member']);
   }
 }
