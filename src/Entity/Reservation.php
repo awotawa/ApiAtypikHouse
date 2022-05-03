@@ -7,7 +7,10 @@ use App\Repository\ReservationRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ReservationRepository::class)]
-#[ApiResource]
+#[ApiResource(
+  collectionOperations: ['get', 'post'],
+  itemOperations: ['get', 'patch', 'delete'],
+)]
 class Reservation
 {
     #[ORM\Id]
