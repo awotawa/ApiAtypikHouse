@@ -77,12 +77,12 @@ class Lodging
 
     #[ORM\ManyToOne(targetEntity: Owner::class, inversedBy: 'lodgings')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(["lodging:read"])]
+    #[Groups(["lodging:read", "lodging:write"])]
     private $owner;
 
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'lodgings')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(["lodging:read"])]
+    #[Groups(["lodging:read", "lodging:write"])]
     private $category;
 
     #[ORM\OneToMany(mappedBy: 'lodging', targetEntity: Reservation::class, orphanRemoval: true)]
