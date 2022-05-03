@@ -2,16 +2,19 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\OwnerRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\OwnerRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: OwnerRepository::class)]
 #[ApiResource(
   collectionOperations: ['get', 'post'],
   itemOperations: ['get', 'patch', 'delete'],
+  normalizationContext: ['groups' => ['owner:read']],
+  denormalizationContext: ['groups' => ['owner:write']],
 )]
 class Owner
 {
@@ -22,9 +25,11 @@ class Owner
 
     #[ORM\OneToOne(inversedBy: 'owner', targetEntity: User::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["owner:read"])]
     private $user;
 
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Lodging::class, orphanRemoval: true)]
+    #[Groups(["owner:read"])]
     private $lodgings;
 
     public function __construct()
