@@ -2,17 +2,20 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\PropertyRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\PropertyRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PropertyRepository::class)]
 #[ApiResource(
   collectionOperations: ['get', 'post'],
   itemOperations: ['get', 'patch', 'delete'],
+  normalizationContext: ['groups' => ['property:read']],
+  denormalizationContext: ['groups' => ['property:write']],
 )]
 class Property
 {
@@ -27,6 +30,7 @@ class Property
     ])]
     #[Assert\Regex(['pattern' => "/^([A-Za-zÀ-ÿ '-]+)$/"])]
     #[ORM\Column(type: 'string', length: 30)]
+    #[Groups(["property:read", "property:write"])]
     private $newField;
 
     #[Assert\Length([
@@ -35,13 +39,16 @@ class Property
     ])]
     #[Assert\Regex(['pattern' => "/^([A-Za-zÀ-ÿ0-9 '²,.-]+)$/"])]
     #[ORM\Column(type: 'string', length: 30)]
+    #[Groups(["property:read", "property:write"])]
     private $defaultValue;
 
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'properties')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(["property:read"])]
     private $category;
 
     #[ORM\OneToMany(mappedBy: 'property', targetEntity: LodgingValue::class, orphanRemoval: true)]
+    #[Groups(["property:read"])]
     private $lodgingValues;
 
     public function __construct()
