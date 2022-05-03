@@ -21,9 +21,15 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, ApiTokenRepository $apiTokenRepository)
     {
         parent::__construct($registry, User::class);
+        $this->apiTokenRepository = $apiTokenRepository;
+    }
+
+    public function findByApiToken(string $apiToken): ?User
+    {
+      return $this->apiTokenRepository->findOneBy(['token' => $apiToken])?->getUser();
     }
 
     /**
