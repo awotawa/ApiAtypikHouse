@@ -47,7 +47,7 @@ class Lodging
     ])]
     #[Assert\Regex(['pattern' => "/^([0-9]+(\.[0-9]{0,2})?)$/"])]
     #[ORM\Column(type: 'float')]
-    #[Groups(["lodging:read", "lodging:write"])]
+    #[Groups(["lodging:read", "lodging:write", "reservation:read"])]
     private $rate;
 
     #[Assert\NotBlank()]
@@ -68,7 +68,7 @@ class Lodging
       'maxMessage' => 'Your adress cannot be longer than {{ limit }} characters',
     ])]
     #[ORM\Column(type: 'text', length: 50)]
-    #[Groups(["lodging:read", "lodging:write"])]
+    #[Groups(["lodging:read", "lodging:write", "reservation:read"])]
     private $address;
 
     #[ORM\ManyToOne(targetEntity: Owner::class, inversedBy: 'lodgings')]
