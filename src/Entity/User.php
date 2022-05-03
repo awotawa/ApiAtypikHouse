@@ -28,7 +28,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     #[Assert\Email()]
-    #[Groups(["user:read", "user:write"])]
+    #[Groups(["user:read", "user:write", "owner:read"])]
     private $email;
 
     #[ORM\Column(type: 'json')]
@@ -53,7 +53,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     ])]
     #[Assert\Regex(['pattern' => "/^([A-Za-zÀ-ÿ]+)$/"])]
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["user:read", "user:write"])]
+    #[Groups(["user:read", "user:write", "owner:read"])]
     private $firstName;
 
     #[Assert\NotBlank()]
@@ -65,12 +65,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     ])]
     #[Assert\Regex(['pattern' => "/^([A-Za-zÀ-ÿ]+)$/"])]
     #[ORM\Column(type: 'string', length: 255)]
-    #[Groups(["user:read", "user:write"])]
+    #[Groups(["user:read", "user:write", "owner:read"])]
     private $lastName;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Assert\Regex(['pattern' => "/(https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&=]*))/"])]
-    #[Groups(["user:read", "user:write"])]
+    #[Groups(["user:read", "user:write", "owner:read"])]
     private $photo;
 
     #[ORM\OneToOne(mappedBy: 'user', targetEntity: Owner::class, cascade: ['persist', 'remove'])]
