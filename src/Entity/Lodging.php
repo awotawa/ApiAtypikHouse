@@ -39,7 +39,7 @@ class Lodging
       'minMessage' => 'The name must be at least {{ limit }} characters long',
       'maxMessage' => 'The name cannot be longer than {{ limit }} characters',
     ])]
-    #[Assert\Regex(['pattern' => "/^([A-Za-zÀ-ÿ '-]+)$/"])]
+    #[Assert\Regex(['pattern' => "/^([A-Za-zÀ-ÿ '-.]+)$/"])]
     #[ORM\Column(type: 'string', length: 50)]
     #[Groups(["lodging:read", "lodging:write"])]
     private $name;
