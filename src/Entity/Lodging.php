@@ -10,7 +10,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: LodgingRepository::class)]
-#[ApiResource]
+#[ApiResource(
+  collectionOperations: ['get', 'post'],
+  itemOperations: ['get', 'patch', 'delete'],
+)]
 class Lodging
 {
     #[ORM\Id]
