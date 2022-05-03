@@ -28,7 +28,7 @@ class MediaFixtures extends Fixture implements DependentFixtureInterface
       $media1 = new Media();
       $media1->setLink($faker->url());
       $media1->setLodging($this->getReference("LODGING" . mt_rand(0, 19)));
-      $media1->setMediaType($faker->randomElement(['video', 'image']));
+      $media1->setType($faker->randomElement(['video', 'image']));
       $manager->persist($media1);
     }
 
