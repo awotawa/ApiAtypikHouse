@@ -15,6 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
   collectionOperations: ['get', 'post'],
   itemOperations: ['get', 'patch', 'delete'],
+  attributes: ["pagination_items_per_page" => 10],
 )]
 #[ApiFilter(SearchFilter::class, properties: ['address' => 'partial'])]
 class Lodging
