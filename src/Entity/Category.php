@@ -2,17 +2,20 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\CategoryRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\CategoryRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[ApiResource(
   collectionOperations: ['get', 'post'],
   itemOperations: ['get', 'patch', 'delete'],
+  normalizationContext: ['groups' => ['category:read']],
+  denormalizationContext: ['groups' => ['category:write']],
 )]
 class Category
 {
@@ -28,12 +31,15 @@ class Category
     #[Assert\NotBlank()]
     #[Assert\Regex(['pattern' => "/^([A-Za-zÀ-ÿ '-]+)$/"])]
     #[ORM\Column(type: 'string', length: 30)]
+    #[Groups(["category:read", "category:write"])]
     private $type;
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Property::class, orphanRemoval: true)]
+    #[Groups(["category:read"])]
     private $properties;
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Lodging::class, orphanRemoval: true)]
+    #[Groups(["category:read"])]
     private $lodgings;
 
     public function __construct()
