@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Repository\LodgingRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -14,6 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
   collectionOperations: ['get', 'post'],
   itemOperations: ['get', 'patch', 'delete'],
 )]
+#[ApiFilter(SearchFilter::class, properties: ['address' => 'partial'])]
 class Lodging
 {
     #[ORM\Id]
