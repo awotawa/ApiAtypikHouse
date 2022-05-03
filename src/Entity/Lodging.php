@@ -20,7 +20,11 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
   denormalizationContext: ['groups' => ['lodging:write']],
   attributes: ["pagination_items_per_page" => 10],
 )]
-#[ApiFilter(SearchFilter::class, properties: ['address' => 'partial'])]
+#[ApiFilter(SearchFilter::class, properties: [
+              'address' => 'partial',
+              'category.id' => 'exact'
+              ]
+)]
 class Lodging
 {
     #[ORM\Id]
