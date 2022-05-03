@@ -25,7 +25,7 @@ class Owner
 
     #[ORM\OneToOne(inversedBy: 'owner', targetEntity: User::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(["owner:read"])]
+    #[Groups(["owner:read", "owner:write"])]
     private $user;
 
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Lodging::class, orphanRemoval: true)]

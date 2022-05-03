@@ -44,7 +44,7 @@ class Property
 
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'properties')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(["property:read"])]
+    #[Groups(["property:read", "property:write"])]
     private $category;
 
     #[ORM\OneToMany(mappedBy: 'property', targetEntity: LodgingValue::class, orphanRemoval: true)]

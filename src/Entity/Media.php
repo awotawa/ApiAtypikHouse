@@ -33,7 +33,7 @@ class Media
 
     #[ORM\ManyToOne(targetEntity: Lodging::class, inversedBy: 'media')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(["media:read"])]
+    #[Groups(["media:read", "media:write"])]
     private $lodging;
 
     public function getId(): ?int

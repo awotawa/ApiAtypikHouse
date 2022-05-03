@@ -33,12 +33,12 @@ class LodgingValue
 
     #[ORM\ManyToOne(targetEntity: Lodging::class, inversedBy: 'lodgingValues')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(["lodgingvalue:read"])]
+    #[Groups(["lodgingvalue:read", "lodgingvalue:write"])]
     private $lodging;
 
     #[ORM\ManyToOne(targetEntity: Property::class, inversedBy: 'lodgingValues')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(["lodgingvalue:read"])]
+    #[Groups(["lodgingvalue:read", "lodgingvalue:write"])]
     private $property;
 
     public function getId(): ?int

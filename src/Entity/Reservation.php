@@ -35,12 +35,12 @@ class Reservation
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(["reservation:read"])]
+    #[Groups(["reservation:read", "reservation:write"])]
     private $user;
 
     #[ORM\ManyToOne(targetEntity: Lodging::class, inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(["reservation:read"])]
+    #[Groups(["reservation:read", "reservation:write"])]
     private $lodging;
 
     public function getId(): ?int
