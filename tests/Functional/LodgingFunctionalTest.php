@@ -94,7 +94,7 @@ class LodgingFunctionalTest extends ApiTestCase
 
     $client->request('PATCH', '/api/lodgings/21', [
       "headers" => [
-        "content-type" => "application/json+merge-patch; charset=utf-8"
+        "content-type" => "application/merge-patch+json; charset=utf-8"
       ],
       "json" => [
         'description' => 'An updated description for this lodging that is at least 50 chars long'
