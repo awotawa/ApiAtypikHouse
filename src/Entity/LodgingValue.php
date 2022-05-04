@@ -10,8 +10,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: LodgingValueRepository::class)]
 #[ApiResource(
-  collectionOperations: ['get', 'post'],
-  itemOperations: ['get', 'patch', 'delete'],
+  collectionOperations: [
+    'get',
+    'post' => ['security' => 'is_granted("ROLE_OWNER") and object.getOwner().getUser() === user']
+  ],
+  itemOperations: [
+    'get',
+    'patch' => ['security' => 'is_granted("ROLE_OWNER") and object.getOwner().getUser() === user'],
+    'delete' => ['security' => 'is_granted("ROLE_ADMIN")']
+  ],
   normalizationContext: ['groups' => ['lodgingvalue:read']],
   denormalizationContext: ['groups' => ['lodgingvalue:write']],
 )]

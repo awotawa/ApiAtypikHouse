@@ -9,8 +9,15 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: ReservationRepository::class)]
 #[ApiResource(
-  collectionOperations: ['get', 'post'],
-  itemOperations: ['get', 'patch', 'delete'],
+  collectionOperations: [
+    'get' => ['security' => 'is_granted("ROLE_USER") and object.getUser() === user'],
+    'post' => ['security' => 'is_granted("ROLE_USER") and object.getUser() === user']
+  ],
+  itemOperations: [
+    'get' => ['security' => 'is_granted("ROLE_USER") and object.getUser() === user'],
+    'patch' => ['security' => 'is_granted("ROLE_USER") and object.getUser() === user'],
+    'delete' => ['security' => 'is_granted("ROLE_ADMIN") and object.getUser() === user']
+  ],
   normalizationContext: ['groups' => ['reservation:read']],
   denormalizationContext: ['groups' => ['reservation:write']],
 )]

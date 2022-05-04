@@ -12,8 +12,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PropertyRepository::class)]
 #[ApiResource(
-  collectionOperations: ['get', 'post'],
-  itemOperations: ['get', 'patch', 'delete'],
+  collectionOperations: [
+    'get',
+    'post' => ['security' => 'is_granted("ROLE_ADMIN")']
+  ],
+  itemOperations: [
+    'get',
+    'patch' => ['security' => 'is_granted("ROLE_ADMIN")'],
+    'delete' => ['security' => 'is_granted("ROLE_ADMIN")']
+  ],
   normalizationContext: ['groups' => ['property:read']],
   denormalizationContext: ['groups' => ['property:write']],
 )]

@@ -10,8 +10,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MediaRepository::class)]
 #[ApiResource(
-  collectionOperations: ['get', 'post'],
-  itemOperations: ['get', 'patch', 'delete'],
+  collectionOperations: [
+    'get',
+    'post' => ['security' => 'is_granted("ROLE_OWNER")']
+  ],
+  itemOperations: [
+    'get',
+    'patch' => ['security' => 'is_granted("ROLE_OWNER")'],
+    'delete' => ['security' => 'is_granted("ROLE_OWNER")']
+  ],
   normalizationContext: ['groups' => ['media:read']],
   denormalizationContext: ['groups' => ['media:write']],
 )]

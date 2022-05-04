@@ -11,8 +11,15 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: OwnerRepository::class)]
 #[ApiResource(
-  collectionOperations: ['get', 'post'],
-  itemOperations: ['get', 'patch', 'delete'],
+  collectionOperations: [
+    'get',
+    'post' => ['security' => 'is_granted("ROLE_ADMIN")']
+  ],
+  itemOperations: [
+    'get',
+    'patch' => ['security' => 'is_granted("ROLE_ADMIN")'],
+    'delete' => ['security' => 'is_granted("ROLE_ADMIN")']
+  ],
   normalizationContext: ['groups' => ['owner:read']],
   denormalizationContext: ['groups' => ['owner:write']],
 )]

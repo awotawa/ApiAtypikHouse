@@ -14,8 +14,15 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 #[ORM\Entity(repositoryClass: LodgingRepository::class)]
 #[ApiResource(
-  collectionOperations: ['get', 'post'],
-  itemOperations: ['get', 'patch', 'delete'],
+  collectionOperations: [
+    'get',
+    'post' => ['security' => 'is_granted("ROLE_OWNER") and object.getOwner().getUser() === user']
+  ],
+  itemOperations: [
+    'get',
+    'patch' => ['security' => 'is_granted("ROLE_OWNER") and object.getOwner().getUser() === user'],
+    'delete' => ['security' => 'is_granted("ROLE_ADMIN")']
+  ],
   normalizationContext: ['groups' => ['lodging:read']],
   denormalizationContext: ['groups' => ['lodging:write']],
   attributes: ["pagination_items_per_page" => 10],

@@ -13,9 +13,44 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ApiResource(
+  security: 'is_granted("ROLE_USER")',
+  collectionOperations: [
+    'me' => [
+      'pagination_enabled' => false,
+      'path' => '/users/me',
+      'method' => 'get',
+      'controller' => MeController::class,
+      'read' => false,
+      'openapi_context' => [
+        'security' => [['bearerAuth' => []]],
+        'tags' => ['User'],
+        'summary' => 'Register a new user',
+        'description' => 'Registers a new user',
+        'openapi_context' => [['bearerAuth' => []]]
+      ]
+    ]
+  ],
+  itemOperations: [
+    'get' => [
+      'controller' => NotFoundAction::class,
+      'openapi_context' => ['summury' => 'hidden'],
+      'read' => false,
+      'output' => false
+    ],
+  ],
+  normalizationContext: ['groups' => ['user:read']]
+)]
 // #[ApiResource(
-//   collectionOperations: ['get', 'post'],
-//   itemOperations: ['get', 'patch', 'delete'],
+//   collectionOperations: [
+//       'get' => ['security' => 'is_granted("ROLE_USER")'],
+//       'post'
+//     ],
+//   itemOperations: [
+//       'get' => ['security' => 'is_granted("ROLE_USER")'],
+//       'patch' => ['security' => 'is_granted("ROLE_USER")'],
+//       'delete' => ['security' => 'is_granted("ROLE_USER")']
+//     ],
 //   normalizationContext: ['groups' => ['user:read']],
 //   denormalizationContext: ['groups' => ['user:write']],
 // )]
@@ -24,6 +59,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(["user:read"])]
     private $id;
 
     #[Assert\NotBlank()]
@@ -33,6 +69,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $email;
 
     #[ORM\Column(type: 'json')]
+    #[Groups(["user:read"])]
     private $roles = [];
 
     #[Assert\NotBlank()]
