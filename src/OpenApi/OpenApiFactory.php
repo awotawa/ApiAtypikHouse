@@ -9,7 +9,7 @@ use ApiPlatform\Core\OpenApi\Factory\OpenApiFactoryInterface;
 use ApiPlatform\Core\OpenApi\OpenApi;
 use ApiPlatform\Core\OpenApi\Model;
 
-final class JwtDecorator implements OpenApiFactoryInterface
+final class OpenApiFactory implements OpenApiFactoryInterface
 {
   public function __construct(
     private OpenApiFactoryInterface $decorated
