@@ -6,15 +6,15 @@ use ApiPlatform\Core\DataPersister\DataPersisterInterface;
 use App\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserPersister implements DataPersisterInterface
 {
-  protected $em;
 
-  public function __construct(EntityManagerInterface $em)
-  {
-    $this->em = $em;
-  }
+  public function __construct(
+    private EntityManagerInterface $em,
+    private UserPasswordHasherInterface $passwordHasher
+  ){}
 
   public function supports($data): bool
   {
@@ -27,7 +27,8 @@ class UserPersister implements DataPersisterInterface
     // $data->setCreatedAt(new \DateTime());
     // 2. Mettre une date de update sur le lodging
     // dd($data->getPassword());
-    $hashedPassword = hash('sha256', $data->getPassword());
+    $hashedPassword = $this->passwordHasher->hashPassword($data, $data->getPassword());
+
     // dd($hashedPassword);
     $data->setPassword($hashedPassword);
     // 3. Ask Doctrine to persist the data

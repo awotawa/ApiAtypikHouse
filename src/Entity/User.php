@@ -10,51 +10,40 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
   security: 'is_granted("ROLE_USER")',
   collectionOperations: [
-    'me' => [
-      'pagination_enabled' => false,
-      'path' => '/users/me',
-      'method' => 'get',
-      'controller' => MeController::class,
-      'read' => false,
-      'openapi_context' => [
-        'security' => [['bearerAuth' => []]],
-        'tags' => ['User'],
-        'summary' => 'Register a new user',
-        'description' => 'Registers a new user',
-        'openapi_context' => [['bearerAuth' => []]]
-      ]
-    ]
-  ],
+      'me' => [
+        'pagination_enabled' => false,
+        'path' => '/me',
+        'method' => 'get',
+        'controller' => MeController::class,
+        'read' => false,
+        'openapi_context' => [
+          'security' => [['bearerAuth' => []]],
+        ]
+      ],
+      'get',
+      'post'
+    ],
   itemOperations: [
     'get' => [
       'controller' => NotFoundAction::class,
-      'openapi_context' => ['summury' => 'hidden'],
+      'openapi_context' => ['summary' => 'hidden'],
       'read' => false,
       'output' => false
     ],
+    'patch',
+    'delete'
   ],
-  normalizationContext: ['groups' => ['user:read']]
+  normalizationContext: ['groups' => ['user:read']],
+  denormalizationContext: ['groups' => ['user:write']],
 )]
-// #[ApiResource(
-//   collectionOperations: [
-//       'get' => ['security' => 'is_granted("ROLE_USER")'],
-//       'post'
-//     ],
-//   itemOperations: [
-//       'get' => ['security' => 'is_granted("ROLE_USER")'],
-//       'patch' => ['security' => 'is_granted("ROLE_USER")'],
-//       'delete' => ['security' => 'is_granted("ROLE_USER")']
-//     ],
-//   normalizationContext: ['groups' => ['user:read']],
-//   denormalizationContext: ['groups' => ['user:write']],
-// )]
-class User implements UserInterface, PasswordAuthenticatedUserInterface
+class User implements UserInterface, JWTUserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -182,6 +171,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
+    public function setId(?int $id): self
+    {
+      $this->id = $id;
+
+      return $this;
+    }
+
     public function setPassword(string $password): self
     {
         $this->password = $password;
@@ -252,6 +248,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserName(): string
+    {
+      return (string) $this->email;
+    }
+
+    /**
      * @return Collection<int, Reservation>
      */
     public function getReservations(): Collection
@@ -310,4 +316,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public static function createFromPayload($id, array $payload)
+    {
+      return (new User())->setId($id)->setEmail($payload['username'] ?? '');
+    }
+
 }
