@@ -31,6 +31,7 @@ security:
         api:
             provider: jwt
             pattern: ^/api/
+            lazy: false
             stateless: true
             jwt: ~
         # main:
@@ -60,15 +61,15 @@ security:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
 
-        # - { path: ^/api/docs, roles: PUBLIC_ACCESS }
-        # - { path: ^/api/login$, roles: PUBLIC_ACCESS }
-        # - { path: ^/api/users$, roles: PUBLIC_ACCESS, methods:[POST] }
-        # - { path: ^/api/lodgings$, roles: PUBLIC_ACCESS, methods:[GET] }
-        # - { path: ^/api/lodging_values$, roles: PUBLIC_ACCESS, methods:[GET] }
-        # - { path: ^/api/properties$, roles: PUBLIC_ACCESS, methods:[GET] }
-        # - { path: ^/api/categories$, roles: PUBLIC_ACCESS, methods:[GET] }
-        # - { path: ^/api$, roles: PUBLIC_ACCESS }
-        # - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/docs, roles: PUBLIC_ACCESS }
+        - { path: ^/api/login$, roles: PUBLIC_ACCESS }
+        - { path: ^/api/users$, roles: PUBLIC_ACCESS, methods:[POST] }
+        - { path: ^/api/lodgings$, roles: PUBLIC_ACCESS, methods:[GET] }
+        - { path: ^/api/lodging_values$, roles: PUBLIC_ACCESS, methods:[GET] }
+        - { path: ^/api/properties$, roles: PUBLIC_ACCESS, methods:[GET] }
+        - { path: ^/api/categories$, roles: PUBLIC_ACCESS, methods:[GET] }
+        - { path: ^/api$, roles: PUBLIC_ACCESS }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 
     role_hierarchy:
         ROLE_OWNER: ROLE_USER

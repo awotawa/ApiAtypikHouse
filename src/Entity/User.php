@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Controller\MeController;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\Collection;
@@ -15,11 +16,12 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
-  security: 'is_granted("ROLE_USER")',
+//   security: 'is_granted("ROLE_USER")',
   collectionOperations: [
       'me' => [
+        'security' => 'is_granted("ROLE_USER")',
         'pagination_enabled' => false,
-        'path' => '/me',
+        'path' => '/users/me',
         'method' => 'get',
         'controller' => MeController::class,
         'read' => false,
@@ -28,7 +30,9 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
         ]
       ],
       'get',
-      'post'
+      'post' => [
+        'security' => 'is_granted("PUBLIC_ACCESS")',
+      ]
     ],
   itemOperations: [
     'get' => [
@@ -319,7 +323,10 @@ class User implements UserInterface, JWTUserInterface, PasswordAuthenticatedUser
 
     public static function createFromPayload($id, array $payload)
     {
-      return (new User())->setId($id)->setEmail($payload['username'] ?? '');
+      return (new User())
+        ->setId($id)
+        ->setEmail($payload['username'] ?? '')
+        ->setRoles($payload['roles'] ?? '');
     }
 
 }
