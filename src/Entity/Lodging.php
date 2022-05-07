@@ -16,7 +16,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 #[ApiResource(
   collectionOperations: [
     'get',
-    'post' => ['security' => 'is_granted("ROLE_OWNER") and object.getOwner().getUser() === user']
+    'post' => ['security' => 'is_granted("ROLE_OWNER")']
   ],
   itemOperations: [
     'get',
@@ -37,6 +37,7 @@ class Lodging
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(["lodging:read"])]
     private $id;
 
     #[Assert\NotBlank()]
@@ -101,7 +102,7 @@ class Lodging
     private $lodgingValues;
 
     #[ORM\OneToMany(mappedBy: 'lodging', targetEntity: Media::class, orphanRemoval: true)]
-    #[Groups(["lodging:read"])]
+    #[Groups(["lodging:read", "lodging:write"])]
     private $media;
 
     public function __construct()
