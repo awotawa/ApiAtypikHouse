@@ -15,7 +15,7 @@ class JWTSubscriber implements EventSubscriberInterface
     $event->setData($data);
   }
 
-  public static function getSubscribedEvents()
+  public static function getSubscribedEvents(): array
   {
     return [
       'lexik_jwt_authentication.on_jwt_created' => 'onLexikJwtAuthenticationOnJwtCreated',
