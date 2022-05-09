@@ -20,7 +20,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
   ],
   itemOperations: [
     'get',
-    'patch' => ['security' => 'is_granted("ROLE_OWNER") and object.getOwner().getUser() === user'],
+    'patch' => ['security' => '(is_granted("ROLE_OWNER") and object.getOwner().getUser() === user) or is_granted("ROLE_ADMIN")'],
     'delete' => ['security' => 'is_granted("ROLE_ADMIN")']
   ],
   normalizationContext: ['groups' => ['lodging:read']],

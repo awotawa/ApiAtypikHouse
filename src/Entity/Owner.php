@@ -8,6 +8,8 @@ use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 #[ORM\Entity(repositoryClass: OwnerRepository::class)]
 #[ApiResource(
@@ -23,11 +25,16 @@ use Symfony\Component\Serializer\Annotation\Groups;
   normalizationContext: ['groups' => ['owner:read']],
   denormalizationContext: ['groups' => ['owner:write']],
 )]
+#[ApiFilter(SearchFilter::class, properties: [
+    'user.id' => 'exact'
+    ]
+)]
 class Owner
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    #[Groups(["owner:read"])]
     private $id;
 
     #[ORM\OneToOne(inversedBy: 'owner', targetEntity: User::class, cascade: ['persist', 'remove'])]
