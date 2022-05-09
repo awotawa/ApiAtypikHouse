@@ -330,7 +330,10 @@ class User implements UserInterface, JWTUserInterface, PasswordAuthenticatedUser
       return (new User())
         ->setId($id)
         ->setEmail($payload['username'] ?? '')
-        ->setRoles($payload['roles'] ?? '');
+        ->setRoles($payload['roles'] ?? '')
+        ->setFirstName($payload['roles'] ?? '')
+        ->setLastName($payload['lastName'] ?? '')
+        ->setPhoto($payload['photo'] ?? '');
     }
 
     /**
