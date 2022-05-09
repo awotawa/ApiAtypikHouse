@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+// use ApiPlatform\Core\Annotation\ApiFilter;
+// use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use App\Controller\MeController;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
@@ -13,6 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Security\User\JWTUserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
@@ -47,6 +50,10 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
   normalizationContext: ['groups' => ['user:read']],
   denormalizationContext: ['groups' => ['user:write']],
 )]
+// #[ApiFilter(SearchFilter::class, properties: [
+//     'owner.id' => 'exact'
+//     ]
+// )]
 class User implements UserInterface, JWTUserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -104,6 +111,7 @@ class User implements UserInterface, JWTUserInterface, PasswordAuthenticatedUser
     #[Groups(["user:read", "user:write", "owner:read"])]
     private $photo;
 
+    #[ApiSubresource()]
     #[ORM\OneToOne(mappedBy: 'user', targetEntity: Owner::class, cascade: ['persist', 'remove'])]
     #[Groups(["user:read"])]
     private $owner;
@@ -330,7 +338,10 @@ class User implements UserInterface, JWTUserInterface, PasswordAuthenticatedUser
       return (new User())
         ->setId($id)
         ->setEmail($payload['username'] ?? '')
-        ->setRoles($payload['roles'] ?? '');
+        ->setRoles($payload['roles'] ?? '')
+        ->setFirstName($payload['firstname'] ?? '')
+        ->setLastName($payload['lastname'] ?? '')
+        ->setPhoto($payload['photo'] ?? '');
     }
 
     /**
