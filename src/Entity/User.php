@@ -69,7 +69,7 @@ class User implements UserInterface, JWTUserInterface, PasswordAuthenticatedUser
     private $email;
 
     #[ORM\Column(type: 'json')]
-    #[Groups(["user:read", "user:write"])]
+    #[Groups(["user:read"])]
     private $roles = [];
 
     #[Assert\NotBlank()]
