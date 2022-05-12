@@ -34,10 +34,10 @@ DirectoryIndex index.php
     #RewriteCond %{HTTP:Authorization} .+
     #RewriteRule ^ - [E=HTTP_AUTHORIZATION:%0]
 
-    # RewriteCond %{HTTP:Authorization} .
-    # RewriteRule ^ - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
-    RewriteCond %{HTTPS} !=on
-    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301,NE]
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule ^ - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+    # RewriteCond %{HTTPS} !=on
+    # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301,NE]
 
 
 
