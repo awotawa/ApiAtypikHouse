@@ -31,21 +31,11 @@ class Property
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[Assert\Length([
-      'max' => 30,
-      'maxMessage' => 'Your newField cannot be longer than {{ limit }} characters',
-    ])]
-    #[Assert\Regex(['pattern' => "/^([A-Za-zÀ-ÿ '-]+)$/"])]
-    #[ORM\Column(type: 'string', length: 30)]
+    #[ORM\Column(type: 'json')]
     #[Groups(["property:read", "property:write", "lodgingvalue:read"])]
     private $newField;
 
-    #[Assert\Length([
-      'max' => 30,
-      'maxMessage' => 'Your defaultValue cannot be longer than {{ limit }} characters',
-    ])]
-    #[Assert\Regex(['pattern' => "/^([A-Za-zÀ-ÿ0-9 '²,.-]+)$/"])]
-    #[ORM\Column(type: 'string', length: 30)]
+    #[ORM\Column(type: 'json')]
     #[Groups(["property:read", "property:write", "lodgingvalue:read"])]
     private $defaultValue;
 
