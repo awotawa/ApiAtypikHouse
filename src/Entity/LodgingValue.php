@@ -12,11 +12,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ApiResource(
   collectionOperations: [
     'get',
-    'post' => ['security' => 'is_granted("ROLE_OWNER") and object.getOwner().getUser() === user']
+    'post' => ['security' => '(is_granted("ROLE_OWNER") and object.getOwner().getUser() === user) or is_granted("ROLE_ADMIN")']
   ],
   itemOperations: [
     'get',
-    'patch' => ['security' => 'is_granted("ROLE_OWNER") and object.getOwner().getUser() === user'],
+    'patch' => ['security' => '(is_granted("ROLE_OWNER") and object.getOwner().getUser() === user) or is_granted("ROLE_ADMIN")'],
     'delete' => ['security' => 'is_granted("ROLE_ADMIN")']
   ],
   normalizationContext: ['groups' => ['lodgingvalue:read']],
