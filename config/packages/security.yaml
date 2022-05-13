@@ -69,7 +69,7 @@ security:
         - { path: ^/api/lodging_values, roles: PUBLIC_ACCESS, methods:[GET] }
         - { path: ^/api/properties, roles: PUBLIC_ACCESS, methods:[GET] }
         - { path: ^/api/categories, roles: PUBLIC_ACCESS, methods:[GET] }
-        - { path: ^/api/media, roles: PUBLIC_ACCESS, methods:[GET] }
+          - { path: ^/api/media, roles: PUBLIC_ACCESS, methods:[GET] }
         - { path: ^/api$, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
 
