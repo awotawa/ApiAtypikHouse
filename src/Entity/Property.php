@@ -58,6 +58,9 @@ class Property
     #[Groups(["property:read"])]
     private $lodgingValues;
 
+    #[ORM\Column(type: 'string', length: 255)]
+    private $valueType;
+
     public function __construct()
     {
         $this->lodgingValues = new ArrayCollection();
@@ -130,6 +133,18 @@ class Property
                 $lodgingValue->setProperty(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getValueType(): ?string
+    {
+        return $this->valueType;
+    }
+
+    public function setValueType(string $valueType): self
+    {
+        $this->valueType = $valueType;
 
         return $this;
     }
