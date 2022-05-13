@@ -59,6 +59,7 @@ class Property
     private $lodgingValues;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Groups(["property:read", "property:write"])]
     private $valueType;
 
     public function __construct()
